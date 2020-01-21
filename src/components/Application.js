@@ -1,28 +1,18 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 import "components/Application.scss";
 import DayList from "components/DayList";
-
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
-];
+import axios from "axios";
 
 export default function Application(props) {
   const [day, setDay] = useState("Monday");
+
+  const [days, setDays] = useState([]);
+
+  useEffect(() => {
+    axios.get(`/api/days`)
+      .then(res => setDays(res.data))
+  }, []); // run once with the [], else none would run each render
 
   return (
     <main className="layout">
