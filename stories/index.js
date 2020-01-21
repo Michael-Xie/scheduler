@@ -98,10 +98,10 @@ storiesOf("DayListItem", module) //Initiates Storybook and registers our DayList
           id={interviewer.id}
           name={interviewer.name}
           avatar={interviewer.avatar}
-          setInterviewer={event => action("setInterviewer")(interviewer.id)}
+          onChange={event => action("onChange")(interviewer.id)}
         />
       ));
-      
+
       const interviewers = [
         { id: 1, name: "Sylvia Palmer", avatar: "https://i.imgur.com/LpaY82x.png" },
         { id: 2, name: "Tori Malcolm", avatar: "https://i.imgur.com/Nmx0Qxo.png" },
@@ -117,13 +117,13 @@ storiesOf("DayListItem", module) //Initiates Storybook and registers our DayList
         .add("Initial", () => (
           <InterviewerList
             interviewers={interviewers}
-            setInterviewer={action("setInterviewer")}
+            onChange={action("onChange")}
           />
         ))
         .add("Preselected", () => (
           <InterviewerList
             interviewers={interviewers}
-            interviewer={3}
-            setInterviewer={action("setInterviewer")}
+            value={3}
+            onChange={action("onChange")}
           />
         ));
