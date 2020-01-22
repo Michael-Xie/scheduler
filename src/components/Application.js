@@ -5,13 +5,35 @@ import DayList from "components/DayList";
 import axios from "axios";
 
 export default function Application(props) {
-  const [day, setDay] = useState("Monday");
+  // const [day, setDay] = useState("Monday");
 
-  const [days, setDays] = useState([]);
+  // const [days, setDays] = useState([]);
+  const initialState = {
+    day: "Monday", 
+    days: [], 
+    appointments: {}
+  };
+  const [state, setState] = useState(initialState);
+  const setDay = day => setState(prev => ({...prev, day}));
+  // const setDays = days => setState(prev => ({ ...prev, days}));
+
+  // useEffect(() => {
+  //   axios.get(`/api/days`)
+  //     .then(res => setDays(res.data))
+  // }, []); // run once with the [], else none would run each render
 
   useEffect(() => {
-    axios.get(`/api/days`)
-      .then(res => setDays(res.data))
+    Promise.all([
+      axios.get(`/api/days`),
+      axios.get(`/api/appointments`),
+      axios.get(`/api/interviewers`)
+    ]).then((all) => {
+      const [days, appointments, interviewers] = all;
+      console.log("days", days);
+      console.log("appointments", appointments);
+      console.log("interviewers", interviewers);
+      setState(prev => ({days: days.data, appointments: appointments.data}));
+    })
   }, []); // run once with the [], else none would run each render
 
   return (
@@ -27,8 +49,8 @@ export default function Application(props) {
             <hr className="sidebar__separator sidebar--centered" />
             <nav className="sidebar__menu">
               <DayList
-                days={days}
-                day={day}
+                days={state.days}
+                day={state.day}
                 setDay={setDay}
               />
             </nav>
