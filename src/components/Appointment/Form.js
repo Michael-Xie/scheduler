@@ -18,7 +18,7 @@ export default function Form(props) {
   }
   const cancel = () => {
     reset();
-    return props.onCancel();
+    props.onCancel(); //need to call to use back()
   }
   return (
     <main className="appointment__card appointment__card--create">
