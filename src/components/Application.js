@@ -70,15 +70,19 @@ export default function Application(props) {
       ...state.appointments[id],
       interview: { ...interview }
     };
-    console.log("book appointment", appointment);
-    // console.log("formatted appointment for appointments", {[id]: appointment});
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-    console.log("updated appointments", appointments);
-    setState(prev => ({...prev, appointments}));
-    console.log("state", state);
+    console.log("bookInterview", interview, id);
+    if(interview && id) {
+      return axios.put(`/api/appointments/${id}`, {interview})
+      .then((res) => {
+        console.log("put request for interview", res);
+        setState(prev => ({ ...prev, appointments }));
+
+      });
+    }
   }
 
   return (
@@ -109,7 +113,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */
-          
+
           getAppointmentsForDay(state, state.day).map((appointment) => {
             const interview = getInterview(state, appointment.interview);
             const interviewers = getInterviewersForDay(state, state.day);
@@ -122,11 +126,11 @@ export default function Application(props) {
                 interview={interview}
                 interviewers={interviewers}
                 bookInterview={bookInterview}
-                // onAdd={()=>null}
+              // onAdd={()=>null}
               />
             )
           })}
-          <Appointment key="last" time="5pm" />
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
