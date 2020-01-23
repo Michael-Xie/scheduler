@@ -66,7 +66,19 @@ export default function Application(props) {
   }, []); // run once with the [], else none would run each render
 
   function bookInterview(id, interview) {
-    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    console.log("book appointment", appointment);
+    // console.log("formatted appointment for appointments", {[id]: appointment});
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    console.log("updated appointments", appointments);
+    setState(prev => ({...prev, appointments}));
+    console.log("state", state);
   }
 
   return (
@@ -101,7 +113,7 @@ export default function Application(props) {
           getAppointmentsForDay(state, state.day).map((appointment) => {
             const interview = getInterview(state, appointment.interview);
             const interviewers = getInterviewersForDay(state, state.day);
-            console.log("interviewers by day", interviewers);
+            // console.log("interviewers by day", interviewers);
             return (
               <Appointment
                 key={appointment.id}
@@ -110,6 +122,7 @@ export default function Application(props) {
                 interview={interview}
                 interviewers={interviewers}
                 bookInterview={bookInterview}
+                // onAdd={()=>null}
               />
             )
           })}

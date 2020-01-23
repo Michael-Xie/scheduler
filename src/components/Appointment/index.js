@@ -15,24 +15,27 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
-
-  function save(name, interviewer) {
+  console.log("Appointment prop interview", props.interview);
+  const save = (name, interviewer) => {
     const interview = {
       student: name,
       interviewer
     };
+
     props.bookInterview(props.id, interview);
+    transition(SHOW);
   }
   return (
     <article className="appointment">
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => {
+        console.log('johnny clicked');
         transition(CREATE);
       }} />}
       {mode === SHOW && (
         <Show
-          student={props.interview.student}
-          interviewer={props.interview.interviewer}
+          student={props.interview && props.interview.student}
+          interviewer={props.interview && props.interview.interviewer}
         />
       )}
       {mode === CREATE && (
