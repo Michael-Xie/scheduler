@@ -85,6 +85,26 @@ export default function Application(props) {
     }
   }
 
+  function cancelInterview(id) {
+    // set interview to null
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    }
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    console.log("cancelInterview", appointments, id);
+    if (id) {
+      return axios.delete(`/api/appointments/${id}`)
+      .then((res) => {
+        console.log("cancelInterview", res);
+        setState(prev => ({...prev, appointments}));
+      })
+    }
+
+  }
   return (
     <main className="layout">
       <section className="sidebar">
@@ -126,6 +146,7 @@ export default function Application(props) {
                 interview={interview}
                 interviewers={interviewers}
                 bookInterview={bookInterview}
+                cancelInterview={cancelInterview}
               // onAdd={()=>null}
               />
             )
