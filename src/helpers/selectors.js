@@ -15,7 +15,6 @@ export function getInterview(state, interview) {
     const interviewer = state.interviewers[interview.interviewer];
     interviewObj = {student: studentName, interviewer}
   }
-  console.log("interview obj", interviewObj);
   return interviewObj;
 }
 
@@ -27,6 +26,5 @@ export function getInterviewersForDay(state, day) {
     selectedDayInterviewers = filteredDays[0].interviewers.map((value) => state.interviewers[value]);
   }
 
-  console.log("interviewer day", selectedDayInterviewers);
   return selectedDayInterviewers;
 }

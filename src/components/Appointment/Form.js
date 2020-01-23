@@ -4,11 +4,6 @@ import Button from "components/Button";
 import InterviewerList from "components/InterviewerList";
 
 export default function Form(props) {
-//   name:String - done
-// interviewers:Array - done
-// interviewer:Number - done
-// onSave:Function
-// onCancel:Function
   const [name, setName] = useState(props.name || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const reset = () => {
