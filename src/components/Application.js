@@ -65,6 +65,10 @@ export default function Application(props) {
     })
   }, []); // run once with the [], else none would run each render
 
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+  }
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -105,6 +109,7 @@ export default function Application(props) {
                 time={appointment.time}
                 interview={interview}
                 interviewers={interviewers}
+                bookInterview={bookInterview}
               />
             )
           })}
