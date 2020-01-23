@@ -17,6 +17,7 @@ export default function Appointment(props) {
   const SAVING = "SAVING";
   const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
+  const EDIT = "EDIT";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -28,16 +29,16 @@ export default function Appointment(props) {
     };
     transition(SAVING);
     props.bookInterview(props.id, interview)
-      .then(()=> transition(SHOW));
+      .then(() => transition(SHOW));
   }
 
   const del = () => {
     transition(CONFIRM);
     transition(DELETING);
     props.cancelInterview(props.id)
-    .then((res) => {
-      transition(EMPTY);
-    })
+      .then((res) => {
+        transition(EMPTY);
+      })
   }
   return (
     <article className="appointment">
@@ -49,7 +50,8 @@ export default function Appointment(props) {
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
-          onDelete={()=> transition(CONFIRM)}
+          onDelete={() => transition(CONFIRM)}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE && (
@@ -62,13 +64,23 @@ export default function Appointment(props) {
         />
       )}
       {mode === SAVING && (
-        <Status message="Saving"/>
+        <Status message="Saving" />
       )}
       {mode === CONFIRM && (
-        <Confirm message="Are you sure you want to delete?" onConfirm={del} onCancel={() => back()}/>
+        <Confirm message="Are you sure you want to delete?" onConfirm={del} onCancel={() => back()} />
       )}
       {mode === DELETING && (
-        <Status  message="Deleting"/>
+        <Status message="Deleting" />
+      )}
+      {mode === EDIT && (
+        <Form
+          name = {props.interview.student}
+          interviewers={props.interviewers}
+          onCancel={() => {
+            back()
+          }}
+          onSave={save}
+        />
       )}
     </article>
   )
