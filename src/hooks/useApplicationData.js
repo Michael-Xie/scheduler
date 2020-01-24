@@ -1,13 +1,38 @@
-import React, { useState, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
+import axios from "axios";
 
-export default function useApplicationData(state, action) {
+export default function useApplicationData() {
+  const SET_DAY = "SET_DAY";
+  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+  const SET_INTERVIEW = "SET_INTERVIEW";
+
   const initialState = {
     day: "Monday",
     days: [],
-    appointments: {}
+    appointments: {},
+    interviewers: {}
   };
-  const [state, setState] = useState(initialState);
-  const setDay = day => setState(prev => ({ ...prev, day }));
+
+  const handlers = {
+    [SET_DAY]: (prevState, action) => {
+      return {...prevState, day: action.value};
+    },
+    [SET_APPLICATION_DATA]: (prevState, action) => {
+      return {...prevState, ...action.value}
+    },
+    [SET_INTERVIEW]: (prevState, action) => {
+      return {...prevState, interview: action.value};
+    }
+  }
+  const reducer = (prevState, action) => {
+    const handler = handlers[action.type];
+    if (handler) {
+      return handler(prevState, action);
+    }
+    return prevState;
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     Promise.all([
@@ -19,9 +44,19 @@ export default function useApplicationData(state, action) {
       console.log("days", days);
       console.log("appointments", appointments);
       console.log("interviewers", interviewers);
-      setState(prev => ({ ...prev, days: days.data, appointments: appointments.data, interviewers: interviewers.data }));
+      dispatch({
+        type: SET_APPLICATION_DATA, 
+        value: {
+          days: days.data, 
+          appointments: appointments.data, 
+          interviewers: interviewers.data
+        }});
     })
   }, []); // run once with the [], else none would run each render
+
+  const setDay = function(day) {
+    dispatch({type: SET_DAY, value: day});
+  }
 
   function bookInterview(id, interview) {
     const appointment = {
@@ -37,8 +72,7 @@ export default function useApplicationData(state, action) {
       return axios.put(`/api/appointments/${id}`, { interview })
         .then((res) => {
           console.log("put request for interview", res);
-          setState(prev => ({ ...prev, appointments }));
-
+          dispatch({type: SET_APPLICATION_DATA, value: {appointments: appointments}});
         });
     }
   }
@@ -58,7 +92,7 @@ export default function useApplicationData(state, action) {
       return axios.delete(`/api/appointments/${id}`)
         .then((res) => {
           console.log("cancelInterview", res);
-          setState(prev => ({ ...prev, appointments }));
+          dispatch({type: SET_APPLICATION_DATA, value: {appointments: appointments}})
         })
     }
 
