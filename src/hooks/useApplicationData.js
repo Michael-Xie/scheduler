@@ -5,6 +5,7 @@ export default function useApplicationData() {
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
+  const SET_SPOTS = "SET_SPOTS";
 
   const initialState = {
     day: "Monday",
@@ -22,6 +23,22 @@ export default function useApplicationData() {
     },
     [SET_INTERVIEW]: (prevState, action) => {
       return {...prevState, interview: action.value};
+    },
+    [SET_SPOTS]: (prevState, action) => {
+      const {days, appointments} = prevState;
+      const updatedDays = days.map((day) => {
+        if (day.appointments.includes(action.value.appointmentId)) {
+          const spots = day.appointments.reduce((accum, curr) => {
+            if(!appointments[curr].interview) {
+              accum = accum + 1;
+            }
+            return accum;
+          }, 0)
+          day.spots = spots;
+        }
+        return {...day};
+      })
+      return handlers[SET_APPLICATION_DATA](prevState, {value: {days: updatedDays}});
     }
   }
   const reducer = (prevState, action) => {
@@ -73,6 +90,7 @@ export default function useApplicationData() {
         .then((res) => {
           console.log("put request for interview", res);
           dispatch({type: SET_APPLICATION_DATA, value: {appointments: appointments}});
+          dispatch({type: SET_SPOTS, value: {appointmentId: id}})
         });
     }
   }
@@ -92,7 +110,8 @@ export default function useApplicationData() {
       return axios.delete(`/api/appointments/${id}`)
         .then((res) => {
           console.log("cancelInterview", res);
-          dispatch({type: SET_APPLICATION_DATA, value: {appointments: appointments}})
+          dispatch({type: SET_APPLICATION_DATA, value: {appointments: appointments}});
+          dispatch({type: SET_SPOTS, value: {appointmentId: id}});
         })
     }
 
