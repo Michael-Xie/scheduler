@@ -26,6 +26,8 @@ export default function useApplicationData() {
     },
     [SET_SPOTS]: (prevState, action) => {
       const {days, appointments} = prevState;
+      // Find day of week that the appointment belongs to
+      // Then count the number of empty spots (no interview)
       const updatedDays = days.map((day) => {
         if (day.appointments.includes(action.value.appointmentId)) {
           const spots = day.appointments.reduce((accum, curr) => {
