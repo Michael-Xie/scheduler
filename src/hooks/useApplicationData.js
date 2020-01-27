@@ -22,6 +22,9 @@ export default function useApplicationData() {
       return {...prevState, ...action.value}
     },
     [SET_INTERVIEW]: (prevState, action) => {
+      const appointments = {...prevState.appointments}
+      appointments[action.value.appointmentId] = action.value.interview;
+
       return {...prevState, interview: action.value};
     },
     [SET_SPOTS]: (prevState, action) => {
@@ -73,6 +76,10 @@ export default function useApplicationData() {
     })
   }, []); // run once with the [], else none would run each render
 
+  // useEffect(() => {
+  //   const sock = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+  //   console.log(sock);
+  // }, [])
   const setDay = function(day) {
     dispatch({type: SET_DAY, value: day});
   }
