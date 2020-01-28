@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import axios from "axios";
 
-import {reducer, SET_INTERVIEW, SET_DAY, SET_APPLICATION_DATA} from "reducers/application";
+import { reducer, SET_INTERVIEW, SET_DAY, SET_APPLICATION_DATA } from "reducers/application";
 
 export default function useApplicationData() {
 
@@ -24,12 +24,13 @@ export default function useApplicationData() {
       console.log("appointments", appointments);
       console.log("interviewers", interviewers);
       dispatch({
-        type: SET_APPLICATION_DATA, 
+        type: SET_APPLICATION_DATA,
         value: {
-          days: days.data, 
-          appointments: appointments.data, 
+          days: days.data,
+          appointments: appointments.data,
           interviewers: interviewers.data
-        }});
+        }
+      });
     })
   }, []); // run once with the [], else none would run each render
 
@@ -37,8 +38,8 @@ export default function useApplicationData() {
   //   const sock = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
   //   console.log(sock);
   // }, [])
-  const setDay = function(day) {
-    dispatch({type: SET_DAY, value: day});
+  const setDay = function (day) {
+    dispatch({ type: SET_DAY, value: day });
   }
 
   function bookInterview(id, interview) {
@@ -51,13 +52,11 @@ export default function useApplicationData() {
       [id]: appointment
     };
     console.log("bookInterview", interview, id);
-    if (interview && id) {
-      return axios.put(`/api/appointments/${id}`, { interview })
-        .then((res) => {
-          console.log("put request for interview", res);
-          dispatch({type: SET_INTERVIEW, value: {appointmentId: id, appointments: appointments}})
-        });
-    }
+    return axios.put(`/api/appointments/${id}`, { interview })
+      .then((res) => {
+        console.log("put request for interview", res);
+        dispatch({ type: SET_INTERVIEW, value: { appointmentId: id, appointments: appointments } })
+      });
   }
 
   function cancelInterview(id) {
@@ -71,14 +70,11 @@ export default function useApplicationData() {
       [id]: appointment
     };
     console.log("cancelInterview", appointments, id);
-    if (id) {
-      return axios.delete(`/api/appointments/${id}`)
-        .then((res) => {
-          console.log("cancelInterview", res);
-          dispatch({type: SET_INTERVIEW, value: {appointmentId: id, appointments: appointments}})
-        })
-    }
-
+    return axios.delete(`/api/appointments/${id}`)
+      .then((res) => {
+        console.log("cancelInterview", res);
+        dispatch({ type: SET_INTERVIEW, value: { appointmentId: id, appointments: appointments } })
+      })
   }
 
   return { state, setDay, bookInterview, cancelInterview };

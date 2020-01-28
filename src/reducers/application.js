@@ -33,7 +33,9 @@ const reducer = (prevState, action) => {
   if (handler) {
     return handler(prevState, action);
   }
-  return prevState;
+  throw new Error(
+    `Tried to reduce with unsupported action type: ${action.type}`
+  );
 };
 
 export {SET_APPLICATION_DATA, SET_DAY, SET_INTERVIEW, reducer};
