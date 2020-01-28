@@ -1,10 +1,9 @@
 import React, { useEffect, useReducer } from "react";
 import axios from "axios";
 
+import {reducer, SET_INTERVIEW, SET_DAY, SET_APPLICATION_DATA} from "reducers/application";
+
 export default function useApplicationData() {
-  const SET_DAY = "SET_DAY";
-  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-  const SET_INTERVIEW = "SET_INTERVIEW";
 
   const initialState = {
     day: "Monday",
@@ -12,41 +11,6 @@ export default function useApplicationData() {
     appointments: {},
     interviewers: {}
   };
-
-  const handlers = {
-    [SET_DAY]: (prevState, action) => {
-      return {...prevState, day: action.value};
-    },
-    [SET_APPLICATION_DATA]: (prevState, action) => {
-      return {...prevState, ...action.value}
-    },
-    [SET_INTERVIEW]: (prevState, action) => {
-      const appointments = action.value.appointments;
-      // Find day of week that the appointment belongs to
-      // Then count the number of empty spots (no interview)
-      const updatedDays = prevState.days.map((day) => {
-        if (day.appointments.includes(action.value.appointmentId)) {
-          const spots = day.appointments.reduce((accum, curr) => {
-            if(!appointments[curr].interview) {
-              accum = accum + 1;
-            }
-            return accum;
-          }, 0)
-          day.spots = spots;
-        }
-        return {...day};
-      })
-      return handlers[SET_APPLICATION_DATA](prevState, {value: {appointments: appointments, days: updatedDays}});
-    }
-  }
-  const reducer = (prevState, action) => {
-    const handler = handlers[action.type];
-    if (handler) {
-      return handler(prevState, action);
-    }
-    return prevState;
-  };
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -92,8 +56,6 @@ export default function useApplicationData() {
         .then((res) => {
           console.log("put request for interview", res);
           dispatch({type: SET_INTERVIEW, value: {appointmentId: id, appointments: appointments}})
-          // dispatch({type: SET_APPLICATION_DATA, value: {appointments: appointments}});
-          // dispatch({type: SET_SPOTS, value: {appointmentId: id}})
         });
     }
   }
