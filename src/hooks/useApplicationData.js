@@ -43,37 +43,18 @@ export default function useApplicationData() {
   }
 
   function bookInterview(id, interview) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-    console.log("bookInterview", interview, id);
     return axios.put(`/api/appointments/${id}`, { interview })
       .then((res) => {
         console.log("put request for interview", res);
-        dispatch({ type: SET_INTERVIEW, value: { appointmentId: id, appointments: appointments } })
+        dispatch({ type: SET_INTERVIEW, value: { id: id, interview: interview } })
       });
   }
 
   function cancelInterview(id) {
-    // set interview to null
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    }
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-    console.log("cancelInterview", appointments, id);
     return axios.delete(`/api/appointments/${id}`)
       .then((res) => {
         console.log("cancelInterview", res);
-        dispatch({ type: SET_INTERVIEW, value: { appointmentId: id, appointments: appointments } })
+        dispatch({ type: SET_INTERVIEW, value: { id: id, interview: null } })
       })
   }
 

@@ -10,11 +10,21 @@ const handlers = {
     return {...prevState, ...action.value}
   },
   [SET_INTERVIEW]: (prevState, action) => {
-    const appointments = action.value.appointments;
+    console.log("action", action);
+    const appointment = {
+      ...prevState.appointments[action.value.id],
+      interview: action.value.interview
+    };
+    const appointments = {
+      ...prevState.appointments,
+      [action.value.id]: appointment
+    };
+    console.log("set_interview appt", appointment, action.value.id);
     // Find day of week that the appointment belongs to
     // Then count the number of empty spots (no interview)
     const updatedDays = prevState.days.map((day) => {
-      if (day.appointments.includes(action.value.appointmentId)) {
+      console.log("day.appts and action.id and appts", day.appointments, action.value.id, appointments);
+      if (day.appointments.includes(action.value.id)) {
         const spots = day.appointments.reduce((accum, curr) => {
           if(!appointments[curr].interview) {
             accum = accum + 1;
