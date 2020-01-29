@@ -8,9 +8,13 @@ export default function useVisualMode(initialMode) {
     if(!replace) {
       setHistory([...history, currMode]);
     } else {
-      setHistory([initialMode]); //go back to initialMode
+      setHistory(history => {
+        const prevHistory = history.slice(0, -1);
+        return [...prevHistory, currMode];
+      });
     }
   };
+  
   const back = () => {
     if(history.length > 1) {
       history.pop();

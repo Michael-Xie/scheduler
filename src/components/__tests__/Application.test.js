@@ -133,8 +133,8 @@ describe("Application", () => {
     await waitForElement(() => getByText(appointment, "Error"));
     fireEvent.click(getByAltText(appointment, "Close"));
 
-    // 8. Check that we are at EMPTY mode with Add button
-    expect(getByAltText(appointment, "Add")).toBeInTheDocument();
+    // 8. Check that we are at CREATE mode with Enter Student Name input
+    expect(getByPlaceholderText(appointment, /enter student name/i)).toBeInTheDocument();
   });
 
   it("shows the delete error when failing to delete an existing appointment", async () => {
