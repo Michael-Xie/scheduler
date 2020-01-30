@@ -3,9 +3,9 @@
 A Single Page Application that allows a student to book an appointment with an interviewer. It is built using React, and data is persisted by the API server using a PostgreSQL database (https://github.com/Michael-Xie/scheduler-api)
 
 ## Final Product
-
-!["Compose a Tweet in Desktop Mode"](https://github.com/Michael-Xie/tweeter/blob/master/docs/compose-tweet.png)
-!["List of Tweet in Tablet Mode"](https://github.com/Michael-Xie/tweeter/blob/master/docs/tweet-list.png)
+!["Hover on an appointment to see Edit and Delete icons"](https://github.com/Michael-Xie/scheduler/blob/master/docs/appointment-focus.png)
+!["Inside appointment form to fill name and select interviewer"](https://github.com/Michael-Xie/scheduler/blob/master/docs/appointment-form.png)
+!["Delete confirmation for appointment"](https://github.com/Michael-Xie/scheduler/blob/master/docs/delete-appointment.png)
 
 ## Dependencies
 
