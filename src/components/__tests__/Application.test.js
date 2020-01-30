@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, cleanup, waitForElement, fireEvent, getByText, prettyDOM, getAllByTestId, getByPlaceholderText, getByAltText, getAllByText, queryByText, queryByAltText } from "@testing-library/react";
+import { render, cleanup, waitForElement, fireEvent, getByText, prettyDOM, getAllByTestId, getByPlaceholderText, getByAltText, queryByText, queryByAltText } from "@testing-library/react";
 
 import Application from "components/Application";
 import axios from "axios";
@@ -18,25 +18,33 @@ describe("Application", () => {
   });
 
   it("loads data, books an interview and reduces the spots remaining for the first day by 1", async () => {
+    // 1. Render the Application
     const { container, debug } = render(<Application />);
 
+    // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
+    // 3. Get the first appointment, which is empty
     const appointments = getAllByTestId(container, "appointment");
     const appointment = appointments[0];
-
+  
+    // 4. Click the Add button
     fireEvent.click(getByAltText(appointment, "Add"));
 
+    // 5. Fill in student name and select interviewer
     fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
       target: { value: "Lydia Miller-Jones" }
     });
     fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
 
+    // 6. Click Save, and expects the Saving progress to show
     fireEvent.click(getByText(appointment, "Save"));
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
 
+    // 7. Wait until the element with the text "Lydia Miller-Jones" is displayed.
     await waitForElement(() => getByText(appointment, "Lydia Miller-Jones"));
 
+    // 8. Check that the DayListItem with the text "Monday" also has the text "no spots remaining"
     const day = getAllByTestId(container, "day")
       .find(day => queryByText(day, "Monday"));
     expect(getByText(day, "no spots remaining")).toBeInTheDocument();
@@ -49,6 +57,7 @@ describe("Application", () => {
     // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
+    // scoping from container to appointment of interest
     const appointment = getAllByTestId(container, "appointment").find(
       appointment => queryByText(appointment, "Archie Cohen")
     );
@@ -97,8 +106,11 @@ describe("Application", () => {
     // 5. Check that the element with the text "Saving" is displayed.
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
 
+    // 6. Wait until the element with "Name Change" to display
     await waitForElement(() => getByText(appointment, "Name Change"));
-
+    
+    // 7. Check that the DayListItem with the text "Monday" also has the text "1 spot remaining".
+    // expect no change to spots remaining from edit
     const day = getAllByTestId(container, "day")
       .find(day => queryByText(day, "Monday"));
     expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
@@ -107,16 +119,17 @@ describe("Application", () => {
   it("shows the save error when failing to save an appointment", async () => {
     // 1. Reject axios put request when called later in test
     axios.put.mockRejectedValueOnce();
+
     // 2. Render the Application
     const { container, debug } = render(<Application />);
 
     // 3. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
+    // 4. Narrow scope to an empty appointment, and click 'Add' to create appointment
     const appointments = getAllByTestId(container, "appointment");
     const appointment = appointments[0];
 
-    // 4. Click 'Add' to start creating appointment
     fireEvent.click(getByAltText(appointment, "Add"));
 
     // 5. Write name "Lydia Miller-Jones" and select interviewer "Sylvia Palmer"
@@ -140,6 +153,7 @@ describe("Application", () => {
   it("shows the delete error when failing to delete an existing appointment", async () => {
     // 1. Reject axios delete request when called later in test
     axios.delete.mockRejectedValueOnce();
+    
     // 2. Render the Application
     const { container, debug } = render(<Application />);
 

@@ -22,23 +22,24 @@ export default function Appointment(props) {
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
 
+  // Load different appointment mode based on whether there is an interview
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
-
+  
+  // Save the booking in client and db, given name of student and interviewer id
   const save = (name, interviewer) => {
-    console.log(interviewer)
     const interview = {
       student: name,
       interviewer
     };
-    console.log(name, interviewer)
     transition(SAVING);
     props.bookInterview(props.id, interview)
       .then((res) => transition(SHOW))
       .catch((error)=> transition(ERROR_SAVE, true));
   }
 
+  // Delete the booking in client and db
   const del = () => {
     transition(DELETING, true);
     props.cancelInterview(props.id)
@@ -48,6 +49,7 @@ export default function Appointment(props) {
       .catch((error) => transition(ERROR_DELETE, true));
   }
   return (
+    // Render Appointment component depending on its mode
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => {

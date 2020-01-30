@@ -1,4 +1,5 @@
 describe("Appointments", () => {
+  // Initial set up for each test, where data rendered is reset, and page is fully loaded
   beforeEach(() => {
     cy.request("GET", "/api/debug/reset");
     cy.visit("/");
@@ -13,8 +14,11 @@ describe("Appointments", () => {
     cy.get('[data-testid=student-name-input]')
       .type("Lydia Miller-Jones")
 
-    cy.get("[alt='Sylvia Palmer']").click();
-    cy.contains("Save").click();
+    cy.get("[alt='Sylvia Palmer']")
+      .click();
+
+    cy.contains("Save")
+      .click();
 
     cy.contains(".appointment__card--show", "Lydia Miller-Jones");
     cy.contains(".appointment__card--show", "Sylvia Palmer");
@@ -25,10 +29,14 @@ describe("Appointments", () => {
       .first()
       .click({ force: true });
 
-    cy.get("[data-testid=student-name-input]").clear().type("Lydia Miller-Jones");
-    cy.get("[alt='Tori Malcolm']").click();
+    cy.get("[data-testid=student-name-input]")
+      .clear()
+      .type("Lydia Miller-Jones");
+    cy.get("[alt='Tori Malcolm']")
+      .click();
 
-    cy.contains("Save").click();
+    cy.contains("Save")
+      .click();
 
     cy.contains(".appointment__card--show", "Lydia Miller-Jones");
     cy.contains(".appointment__card--show", "Tori Malcolm");
@@ -38,10 +46,13 @@ describe("Appointments", () => {
     cy.get("[alt=Delete]")
       .click({ force: true });
 
-    cy.contains("Confirm").click();
+    cy.contains("Confirm")
+      .click();
 
-    cy.contains("Deleting").should("exist");
-    cy.contains("Deleting").should("not.exist");
+    cy.contains("Deleting")
+      .should("exist");
+    cy.contains("Deleting")
+      .should("not.exist");
 
     cy.contains(".appointment__card--show", "Archie Cohen")
       .should("not.exist");

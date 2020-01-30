@@ -20,9 +20,6 @@ export default function useApplicationData() {
       axios.get(`/api/interviewers`)
     ]).then((all) => {
       const [days, appointments, interviewers] = all;
-      console.log("days", days);
-      console.log("appointments", appointments);
-      console.log("interviewers", interviewers);
       dispatch({
         type: SET_APPLICATION_DATA,
         value: {
@@ -32,28 +29,24 @@ export default function useApplicationData() {
         }
       });
     })
-  }, []); // run once with the [], else none would run each render
+  }, []); // run once with the [], else no brackets would run each render
 
-  // useEffect(() => {
-  //   const sock = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
-  //   console.log(sock);
-  // }, [])
+  // Update the day
   const setDay = function (day) {
     dispatch({ type: SET_DAY, value: day });
   }
-
+  // Execute axios PUT request to update database and update interview object for appointment id
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, { interview })
       .then((res) => {
-        console.log("put request for interview", res);
         dispatch({ type: SET_INTERVIEW, value: { id: id, interview: interview } })
       });
   }
 
+  // Execute axios DELETE request to remove appointment from database and updated interview object for appointment id
   function cancelInterview(id) {
     return axios.delete(`/api/appointments/${id}`)
       .then((res) => {
-        console.log("cancelInterview", res);
         dispatch({ type: SET_INTERVIEW, value: { id: id, interview: null } })
       })
   }

@@ -21,6 +21,7 @@ export default function InterviewerList(props) {
   );
 }
 
+// Type checking for below props
 InterviewerList.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number

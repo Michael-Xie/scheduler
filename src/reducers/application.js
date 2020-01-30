@@ -2,6 +2,7 @@ const SET_DAY = "SET_DAY";
 const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 const SET_INTERVIEW = "SET_INTERVIEW";
 
+// An handler object with different set functions for use in reducer
 const handlers = {
   [SET_DAY]: (prevState, action) => {
     return {...prevState, day: action.value};
@@ -10,7 +11,6 @@ const handlers = {
     return {...prevState, ...action.value}
   },
   [SET_INTERVIEW]: (prevState, action) => {
-    console.log("action", action);
     const appointment = {
       ...prevState.appointments[action.value.id],
       interview: action.value.interview
@@ -19,11 +19,10 @@ const handlers = {
       ...prevState.appointments,
       [action.value.id]: appointment
     };
-    console.log("set_interview appt", appointment, action.value.id);
+
     // Find day of week that the appointment belongs to
     // Then count the number of empty spots (no interview)
     const updatedDays = prevState.days.map((day) => {
-      console.log("day.appts and action.id and appts", day.appointments, action.value.id, appointments);
       if (day.appointments.includes(action.value.id)) {
         const spots = day.appointments.reduce((accum, curr) => {
           if(!appointments[curr].interview) {
@@ -38,6 +37,8 @@ const handlers = {
     return handlers[SET_APPLICATION_DATA](prevState, {value: {appointments: appointments, days: updatedDays}});
   }
 }
+
+// Return a setter function for action.type on action.value
 const reducer = (prevState, action) => {
   const handler = handlers[action.type];
   if (handler) {
